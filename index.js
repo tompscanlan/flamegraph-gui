@@ -26,13 +26,12 @@ app.all('*', function(req, res, next) {
 
 app.get('/image', function(req, res) {
     var options = {
-        root: "/tmp",
         headers: {
             'x-timestamp': Date.now(),
             'x-sent': true
         }
     };
-    res.sendFile('flamegraph-gui.svg', options)
+    res.sendFile('/tmp/flamegraph-gui.svg', options)
 });
 
 app.post('/', function(req, res) {
