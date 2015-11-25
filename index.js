@@ -26,7 +26,7 @@ app.all('*', function(req, res, next) {
 
 app.get('/image', function(req, res) {
     var options = {
-        root: __dirname,
+        root: "/tmp",
         headers: {
             'x-timestamp': Date.now(),
             'x-sent': true
@@ -36,7 +36,10 @@ app.get('/image', function(req, res) {
 });
 
 app.post('/', function(req, res) {
-    var child = exec( req.body.command + "; perf script > out.perf; stackcollapse-perf.pl out.perf > out.folded; flamegraph.pl out.folded > flamegraph-gui.svg; ", function(error, stdout, stderr) {
+    var options = {
+        cwd: "/tmp"
+    }
+    var child = exec(req.body.command + "; perf script > out.perf; stackcollapse-perf.pl out.perf > out.folded; flamegraph.pl out.folded > flamegraph-gui.svg; ", options, function(error, stdout, stderr) {
         writeForm(res);
         res.write('<pre>stdout: ' + stdout + "</pre>");
         res.write('<pre>stderr: ' + stderr + "</pre>");
@@ -65,3 +68,4 @@ var server = app.listen(3000, function() {
     res.type('html');
     res.write('<form action=/ method="post"> <input type="text" name="command"/> <input type="submit"/> </form>');
 }
+
